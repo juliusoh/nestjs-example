@@ -1,0 +1,120 @@
+[tools]
+node = "20"
+
+[tasks.install]
+description = "Install dependencies for both frontend and backend"
+run = """
+echo "Installing backend dependencies..."
+cd backend && npm install
+echo "Installing frontend dependencies..."
+cd ../frontend && npm install
+echo "✅ All dependencies installed!"
+"""
+
+[tasks."install:api"]
+description = "Install backend dependencies only"
+run = "cd backend && npm install"
+
+[tasks."install:web"]
+description = "Install frontend dependencies only"
+run = "cd frontend && npm install"
+
+[tasks.dev]
+description = "Run both frontend and backend in parallel"
+run = """
+trap 'kill 0' EXIT
+cd backend && npm run start:dev &
+cd frontend && npm run dev &
+wait
+"""
+
+[tasks."dev:api"]
+description = "Run backend only"
+run = "cd backend && npm run start:dev"
+
+[tasks."dev:web"]
+description = "Run frontend only"
+run = "cd frontend && npm run dev"
+
+[tasks.build]
+description = "Build both frontend and backend"
+run = """
+echo "Building backend..."
+cd backend && npm run build
+echo "Building frontend..."
+cd ../frontend && npm run build
+echo "✅ Build complete!"
+"""
+
+[tasks."build:api"]
+description = "Build backend only"
+run = "cd backend && npm run build"
+
+[tasks."build:web"]
+description = "Build frontend only"
+run = "cd frontend && npm run build"
+
+[tasks.setup]
+description = "Initial setup - create .env files from examples"
+run = """
+if [ ! -f backend/.env ]; then
+  cp backend/.env.example backend/.env
+  echo "Created backend/.env - don't forget to add your OMDb API key!"
+fi
+if [ ! -f frontend/.env.local ]; then
+  cp frontend/.env.local.example frontend/.env.local
+  echo "Created frontend/.env.local"
+fi
+echo "✅ Setup complete!"
+"""
+
+[tasks.clean]
+description = "Remove node_modules and build artifacts"
+run = """
+rm -rf backend/node_modules backend/dist
+rm -rf frontend/node_modules frontend/.next frontend/out
+echo "✅ Cleaned!"
+"""
+
+[tasks.lint]
+description = "Lint both projects"
+run = """
+echo "Linting backend..."
+cd backend && npm run lint
+echo "Linting frontend..."
+cd ../frontend && npm run lint
+"""
+
+[tasks."lint:api"]
+description = "Lint backend only"
+run = "cd backend && npm run lint"
+
+[tasks."lint:web"]
+description = "Lint frontend only"
+run = "cd frontend && npm run lint"
+
+[tasks.test]
+description = "Run tests for both frontend and backend"
+run = """
+echo "Running backend tests..."
+cd backend && npm test
+echo "Running frontend tests..."
+cd ../frontend && npm test
+echo "✅ All tests complete!"
+"""
+
+[tasks."test:api"]
+description = "Run backend tests only"
+run = "cd backend && npm test"
+
+[tasks."test:web"]
+description = "Run frontend tests only"
+run = "cd frontend && npm test"
+
+[tasks."test:watch:api"]
+description = "Run backend tests in watch mode"
+run = "cd backend && npm run test:watch"
+
+[tasks."test:watch:web"]
+description = "Run frontend tests in watch mode"
+run = "cd frontend && npm run test:watch"

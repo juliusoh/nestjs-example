@@ -7,11 +7,25 @@ export interface Movie {
   Poster: string;
 }
 
+export interface SearchMoviesResponse {
+  movies: Movie[];
+  totalResults: number;
+  page: number;
+  totalPages: number;
+}
+
 export const api = {
-  searchMovies: async (query: string): Promise<Movie[]> => {
-    const response = await fetch(`${API_BASE_URL}/movies/search?q=${encodeURIComponent(query)}`);
+  searchMovies: async (query: string, page: number = 1): Promise<SearchMoviesResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/movies/search?q=${encodeURIComponent(query)}&page=${page}`
+    );
     const data = await response.json();
-    return data.movies || [];
+    return {
+      movies: data.movies || [],
+      totalResults: data.totalResults || 0,
+      page: data.page || 1,
+      totalPages: data.totalPages || 0,
+    };
   },
 
   getFavorites: async (): Promise<Movie[]> => {

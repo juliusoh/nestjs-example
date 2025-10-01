@@ -8,17 +8,25 @@ export interface Movie {
   Poster: string;
 }
 
+export interface SearchMoviesResponse {
+  movies: Movie[];
+  totalResults: number;
+  page: number;
+  totalPages: number;
+}
+
 @Injectable()
 export class MoviesService {
   private readonly OMDB_API_KEY = process.env.OMDB_API_KEY || 'YOUR_API_KEY_HERE';
   private readonly OMDB_BASE_URL = 'http://www.omdbapi.com/';
 
-  async searchMovies(query: string): Promise<Movie[]> {
+  async searchMovies(query: string, page: number = 1): Promise<SearchMoviesResponse> {
     try {
       const response = await axios.get(this.OMDB_BASE_URL, {
         params: {
           apikey: this.OMDB_API_KEY,
           s: query,
+          page: page,
         },
       });
 
@@ -34,10 +42,23 @@ export class MoviesService {
           );
         }
 
-        return [];
+        return {
+          movies: [],
+          totalResults: 0,
+          page: page,
+          totalPages: 0,
+        };
       }
 
-      return response.data.Search || [];
+      const totalResults = parseInt(response.data.totalResults) || 0;
+      const totalPages = Math.ceil(totalResults / 10); // OMDb returns 10 results per page
+
+      return {
+        movies: response.data.Search || [],
+        totalResults,
+        page,
+        totalPages,
+      };
     } catch (error) {
       // If it's already an HttpException, re-throw it
       if (error instanceof HttpException) {

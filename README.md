@@ -12,9 +12,12 @@ movie-search-app/
 
 ## Features
 
-- **Movie Search**: Search for movies using the OMDb API
+- **Movie Search**: Search for movies using the OMDb API with auto-search as you type
+- **Infinite Scroll**: Automatically loads more results as you scroll down
 - **Favorites Management**: Add and remove movies from your favorites list
+- **Persistent Storage**: Favorites are saved to disk and survive server restarts
 - **Real-time Updates**: TanStack Query handles cache management and optimistic updates
+- **Responsive Design**: Mobile-friendly UI built with Tailwind CSS
 - **RESTful API**: Clean separation of concerns with modular NestJS architecture
 
 ## Prerequisites
@@ -147,9 +150,13 @@ If you're using mise, you have access to these convenient commands:
 ellent performance
 
 **Design Choices:**
-- **In-memory storage**: Using a `Map` for favorites storage (resets on restart)
-  - For production, would use a database 
+- **JSON file persistence**: Favorites are saved to `backend/data/favorites.json`
+  - Automatically loads on startup
+  - Saves after each add/remove operation
+  - Survives server restarts
+  - For production, would use a database (PostgreSQL, MongoDB)
 - **Modular structure**: Separate modules for movies and favorites
+- **Pagination**: Supports page-based movie search results
 
 ### Frontend (Next.js)
 
@@ -161,6 +168,7 @@ ellent performance
 
 **Design Choices:**
 - **Client-side rendering**: Using 'use client' for interactive components
+- **Infinite scroll**: Using `useInfiniteQuery` with Intersection Observer for automatic pagination
 - **Query invalidation**: Automatic refetch of favorites after mutations
 - **Simple state management**: TanStack Query handles most state needs
 
@@ -178,7 +186,8 @@ To make this application production-ready,
 - [ ] **HTTPS** - Enforce HTTPS in production
 
 ### Data Persistence
-- [ ] **Database** - Replace in-memory storage with PostgreSQL, MongoDB, or SQLite
+- [x] **Local file storage** - ✅ Currently using JSON file (`backend/data/favorites.json`)
+- [ ] **Database** - Upgrade to PostgreSQL, MongoDB, or SQLite for production
   - Option 1: PostgreSQL with TypeORM or Prisma
   - Option 2: MongoDB with Mongoose
   - Option 3: SQLite for simpler deployment
@@ -186,10 +195,10 @@ To make this application production-ready,
 - [ ] **Data validation** - Ensure data integrity with database constraints
 
 ### Testing
-- [ ] **Unit tests** - Test services and utilities (Jest)
+- [x] **Unit tests** - ✅ 29 passing tests (23 backend, 6 frontend)
 - [ ] **Integration tests** - Test API endpoints (Supertest)
 - [ ] **E2E tests** - Test user flows (Playwright or Cypress)
-- [ ] **Component tests** - Test React components (React Testing Library)
+- [ ] **Component tests** - Add more React components tests
 - [ ] **Code coverage** - Aim for >80% coverage
 
 ### Monitoring & Logging
@@ -209,7 +218,7 @@ To make this application production-ready,
 ### Performance
 - [ ] **Caching** - Add Redis for API response caching
 - [ ] **Database indexing** - Index frequently queried fields (e.g., imdbID)
-- [ ] **Pagination** - Implement pagination for search results and favorites
+- [x] **Pagination** - ✅ Implemented with infinite scroll
 - [ ] **Image optimization** - Use Next.js Image component with proper sizing
 - [ ] **Bundle optimization** - Code splitting and lazy loading
 
@@ -217,6 +226,7 @@ To make this application production-ready,
 
 - Backend runs on port 3000
 - Frontend runs on port 3001
-- Favorites are stored in-memory (will reset when backend restarts)
+- Favorites are persisted to `backend/data/favorites.json`
+- Data directory is created automatically on first run
 
 

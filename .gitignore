@@ -10,6 +10,9 @@ coverage/
 build/
 dist/
 
+# Data
+backend/data/
+
 # Environment variables
 .env
 .env.local

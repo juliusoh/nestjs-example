@@ -12,14 +12,14 @@ export class FavoritesController {
   }
 
   @Post()
-  addFavorite(@Body() movie: Movie) {
-    this.favoritesService.addFavorite(movie);
+  async addFavorite(@Body() movie: Movie) {
+    await this.favoritesService.addFavorite(movie);
     return { success: true };
   }
 
   @Delete(':imdbID')
-  removeFavorite(@Param('imdbID') imdbID: string) {
-    const removed = this.favoritesService.removeFavorite(imdbID);
+  async removeFavorite(@Param('imdbID') imdbID: string) {
+    const removed = await this.favoritesService.removeFavorite(imdbID);
     return { success: removed };
   }
 }

@@ -219,13 +219,4 @@ To make this application production-ready,
 - Frontend runs on port 3001
 - Favorites are stored in-memory (will reset when backend restarts)
 
-## Future Enhancements (Nice to Have)
-
-- Implement infinite scrolling for search results
-- Add browser localStorage persistence for favorites
-- Create unit tests for both frontend and backend
-- Add movie detail page with more information
-- Implement user authentication and profiles
-- Add sorting and filtering options
-- Movie recommendations based on favorites
 
